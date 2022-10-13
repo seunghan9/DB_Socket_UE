@@ -10,7 +10,7 @@ using namespace std;
 
 #define PORT	4000
 #define PACKED_SIZE 1024
-#define SERVER_IP	"192.168.219.100"
+#define SERVER_IP	"192.168.0.178"
 
 int main()
 {
@@ -36,7 +36,7 @@ int main()
 	memset(&ClinetSocketAddr, 0, sizeof(SOCKADDR_IN));
 	ClinetSocketAddr.sin_family = AF_INET;
 	ClinetSocketAddr.sin_port = htons(4000);
-	ClinetSocketAddr.sin_addr.s_addr = inet_addr("192.168.219.100");
+	ClinetSocketAddr.sin_addr.s_addr = inet_addr(SERVER_IP);
 
 	int Result = connect(ClinetSocket, (SOCKADDR*)&ClinetSocketAddr, sizeof(SOCKADDR_IN));
 
@@ -49,7 +49,7 @@ int main()
 	char	MSG[] = "Clinet Send";
 	send(ClinetSocket, MSG, sizeof(MSG), 0);
 
-	char	Buffer[1024] = {0,};
+	char	Buffer[1024] = { 0, };
 	recv(ClinetSocket, Buffer, 1024, 0);
 
 	cout << "Recive Message : " << Buffer << endl;

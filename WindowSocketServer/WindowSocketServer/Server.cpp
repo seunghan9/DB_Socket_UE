@@ -1,12 +1,14 @@
-// 서버
-#define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+// 소켓 라이브러리 링크 걸기 구현부를 바이너리화 시킨 파일의 확장자 lib
+#pragma comment (lib, "libmysql.lib")
+#pragma comment (lib, "ws2_32.lib")
 
+#include <mysql.h>
 #include <stdio.h>
 // 소켓 라이브러리 링크 걸기
-#include <WinSock2.h>
 #include <iostream>
-// 소켓 라이브러리 링크 걸기 구현부를 바이너리화 시킨 파일의 확장자 lib
-#pragma comment(lib,"ws2_32")
+
+
+
 
 using namespace std;
 
@@ -15,6 +17,65 @@ using namespace std;
 
 int main()
 {
+
+	// MySQL 정보를 담을 구조체
+	MYSQL conn;				
+
+	// MySQL 핸들
+	MYSQL* ConnPtr = NULL;	
+	
+	// 쿼리 성공시 결과를 담는 구조체 포인터
+	MYSQL_RES* mysqlResult;
+	
+	// 쿼리 성공시 결과로 나온 행의 정보를 담는 구조체
+	MYSQL_ROW Row;			
+	
+	// 쿼리 요청 후 결과 (성공, 실패)
+	int Stat;				
+
+	// MySQL 정보 초기화
+	mysql_init(&conn);		
+
+	// 데이터 베이스와 연결
+	ConnPtr = mysql_real_connect(&conn, "localhost", "root", "Mytmdgh0910!", "seung0910", 3306, NULL, 0);
+
+	// 연결 결과 확인 Null일 경우 실패
+	if (ConnPtr == NULL)
+	{
+		std::cout << stderr << "Mysql Connection Error : " << mysql_error(&conn);
+		return 1;
+	}
+
+
+	// 쿼리 요청 (테이블 검색)
+	const char* Query = "SELECT * FROM seunghan9";
+	Stat = mysql_query(ConnPtr, Query);
+	if (Stat != 0)
+	{
+		std::cout << stderr << "Mysql Connection Error : " << mysql_error(&conn);
+		return 1;
+	}
+
+	// 요청 결과 저장
+	mysqlResult = mysql_store_result(ConnPtr);
+
+
+	// 요청 결과 출력
+	while ((Row = mysql_fetch_row(mysqlResult)) != NULL)
+	{
+		for (int i = 0; i < mysql_num_fields(mysqlResult); ++i)
+		{
+			cout << Row[i] << "  ";
+		}
+		cout << endl;
+	}
+
+	// Query 결과 초기화
+	mysql_free_result(mysqlResult);
+
+	// Database 해제
+	mysql_close(ConnPtr);
+
 	// WSADATA windows 소켓 초기화 정보를 저장하기 위한 구조체
 	WSADATA wsaData;
 
@@ -60,12 +121,12 @@ int main()
 
 	SOCKADDR_IN ServerSockAddr;
 	memset(&ServerSockAddr, 0, sizeof(SOCKADDR_IN));
+
 	// family는 소켓을 연결할 로컬 또는 원격 주소를 지정하는 데 사용된다.
 	// 주소 정보를 담아두는 구조체이다.
 	// 메모리에 데이터를 저장할 때는 2가지 방식이 있는데, 빅엔디안과 리틀엔디안이란 방식이다.
 	// 빅엔디안은 네트워크상 표준 프로토콜, 리틀엔디안은 주로 인텔 프로세스 계열이다.
 	// 혹여나 다른 방식을 사용하는 컴퓨터간 데이터를 주고 받게 될 경우 문제가 발생할 수 있으니 네트워크 표준을 사용한다.
-	// 
 	// AF_INET은 UDP TCP등 연결지향형 소켓이면 반드시 AF_INET이어야 함을 알 수 있다.
 	ServerSockAddr.sin_family = AF_INET;
 
@@ -124,32 +185,35 @@ int main()
 	// 보내준 데이터가 없다면 여기서 받을 때까지 계속 대기상태로 있는다.
 	// flag 값으로는 활성하지 않음으로 0을 한다.
 
-	char	Buffer[1024] = {0,};
-	int RecvBytes = recv(ClientSocket, Buffer, 1024, 0);
-	
-	cout << "Recive Message : " << Buffer << endl;
-	
-	if (RecvBytes <= 0)
+	while (true)
 	{
-		cout << " fail send : " << GetLastError() << endl; // 마지막 에러 문제 확인
-		exit(-1);
-	}
+		char	Buffer[1024] = { 0, };
+		int RecvBytes = recv(ClientSocket, Buffer, 1024, 0);
 
-	// 서버거 클라이언트로 메시지를 보낸다.
-	char	Buffer2[] = "Server Send";
-	int SendBytes = send(ClientSocket, Buffer2, sizeof(Buffer2), 0);
-	
-	if (SendBytes <= 0)
-	{
-		cout << " fail recv : " << GetLastError() << endl; // 마지막 에러 문제 확인
-		exit(-1);
+		cout << "Recive Message : " << Buffer << endl;
+
+		if (RecvBytes <= 0)
+		{
+			cout << " fail send : " << GetLastError() << endl; // 마지막 에러 문제 확인
+			exit(-1);
+		}
+
+		// 서버거 클라이언트로 메시지를 보낸다.
+		char	Buffer2[] = "Key,3,Name,gg";
+		int SendBytes = send(ClientSocket, Buffer2, sizeof(Buffer2), 0);
+
+		if (SendBytes <= 0)
+		{
+			cout << " fail recv : " << GetLastError() << endl; // 마지막 에러 문제 확인
+			exit(-1);
+		}
 	}
 
 	// 소켓을 닫아준다.
 	closesocket(ClientSocket);
 	closesocket(ServerSocket);
 	
-	// 소켓을 호라용하는 것은 WSAStartup 함수와 WSACleanup 사이에 작성해야한다.
+	// 소켓을 활용하는 것은 WSAStartup 함수와 WSACleanup 사이에 작성해야한다.
 	// 쉽게 생각하면 생성자와 소멸자 문을 닫는 것이다.
 	WSACleanup();
 	return 0;
