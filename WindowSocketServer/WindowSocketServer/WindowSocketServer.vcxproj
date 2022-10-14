@@ -141,7 +141,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Sorce\MySQL.cpp" />
+    <ClCompile Include="Sorce\Main.cpp" />
+    <ClCompile Include="Sorce\TCP_Socket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sorce\MySQL.h" />
+    <ClInclude Include="Sorce\TCP_Socket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
