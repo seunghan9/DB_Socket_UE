@@ -141,11 +141,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Sorce\Common.cpp" />
     <ClCompile Include="Sorce\MySQL.cpp" />
     <ClCompile Include="Sorce\Main.cpp" />
     <ClCompile Include="Sorce\TCP_Socket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sorce\Common.h" />
     <ClInclude Include="Sorce\MySQL.h" />
     <ClInclude Include="Sorce\TCP_Socket.h" />
   </ItemGroup>

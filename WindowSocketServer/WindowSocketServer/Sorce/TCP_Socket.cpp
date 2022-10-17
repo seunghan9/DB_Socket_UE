@@ -7,6 +7,7 @@
 #include "TCP_Socket.h"
 #include <iostream>
 
+
 TCP_Socket::TCP_Socket()
 {
 	_Socket = INVALID_SOCKET;
@@ -212,3 +213,26 @@ bool TCP_Socket::ReciveSocket()
 	}
 	return true;
 }
+
+void TCP_Socket::SendStruct(SpawnActorInfo ActorInfo)
+{
+	int SendInt;
+	int SendIntLength = sizeof(ActorInfo);
+	SendInt = send(_SocketConnected, (char*)&SendIntLength, sizeof(int), 0);
+	if (SendInt == SOCKET_ERROR)
+	{
+		std::cout << "Send Error" << std::endl;
+		exit(-1);
+	}
+	SendInt = send(_SocketConnected, (char*)&ActorInfo, sizeof(SpawnActorInfo), 0);
+	if (SendInt == SOCKET_ERROR)
+	{
+		std::cout << "Send Error" << std::endl;
+		exit(-1);
+	}
+}
+
+void TCP_Socket::ReciveStruct()
+{
+}
+

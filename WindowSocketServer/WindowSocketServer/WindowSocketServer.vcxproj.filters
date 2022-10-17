@@ -24,12 +24,18 @@
     <ClCompile Include="Sorce\TCP_Socket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Sorce\Common.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sorce\MySQL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Sorce\TCP_Socket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorce\Common.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

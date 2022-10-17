@@ -3,17 +3,19 @@
 #include <iostream>
 #include <mysql.h>
 
+
+
 using namespace std;
 
 MySQL::MySQL()
 {
-	
+
 	mysql_init(&conn);				// MySQL 정보 초기화
 }
 
 MySQL::~MySQL()
 {
-	
+
 	mysql_close(ConnPtr);			// MySQL 연결 해제
 }
 
@@ -50,13 +52,44 @@ bool MySQL::RecQueryResult()
 
 void MySQL::OutResult()
 {
-	// 요청 결과 출력
 	while ((Row = mysql_fetch_row(mysqlResult)) != NULL)
 	{
-		for (int i = 0; i < mysql_num_fields(mysqlResult); ++i)
+		for (unsigned int i = 0; i < mysql_num_fields(mysqlResult); ++i)
 		{
-			cout << Row[i] << "  ";
+			std::cout << Row[i] << "  ";
 		}
-		cout << endl;
+		std::cout << std::endl;
+	}
+}
+
+void MySQL::Insert(SpawnActorInfo& ActorInfo)
+{
+	//while ((Row = mysql_fetch_row(mysqlResult)) != NULL)
+	//{
+	Row = mysql_fetch_row(mysqlResult);
+
+	for (unsigned int i = 0; i < mysql_num_fields(mysqlResult); ++i)
+	{
+		switch (i)
+		{
+		case 0:
+			ActorInfo.Key = stoi(Row[i]);
+			break;
+		case 1:
+			ActorInfo.Name = Row[i];
+			break;
+		case 2:
+			ActorInfo.VectorInfo.x = stoi(Row[i]);
+			break;
+		case 3:
+			ActorInfo.VectorInfo.y = stoi(Row[i]);
+			break;
+		case 4:
+			ActorInfo.VectorInfo.z = stoi(Row[i]);
+			break;
+
+		}
+
+
 	}
 }

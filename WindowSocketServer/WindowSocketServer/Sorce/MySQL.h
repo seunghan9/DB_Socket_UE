@@ -3,6 +3,8 @@
 #pragma comment (lib, "libmysql.lib")
 
 #include <mysql.h>
+#include <string>
+#include "Common.h"
 
 class MySQL
 {
@@ -29,6 +31,8 @@ public:
 	bool RecQueryResult();
 	// Query 결과 출력
 	void OutResult();
+	// 데이터를 넣기
+	void Insert(SpawnActorInfo& ActorInfo);
 
 };
 

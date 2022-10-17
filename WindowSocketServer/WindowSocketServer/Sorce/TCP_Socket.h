@@ -6,7 +6,7 @@
 #pragma comment (lib, "ws2_32.lib")
 
 #include <mysql.h>
-
+#include "Common.h"
 
 
 class TCP_Socket
@@ -39,6 +39,13 @@ public:
 	// 데이터 받음
 	bool ReciveSocket();
 	
+	// 구조체 전송
+	void SendStruct(SpawnActorInfo ActorInfo);
+
+	// 구조체 받기
+	void ReciveStruct();
+
+
 	SOCKET _Socket;
 
 	SOCKET _SocketConnected;
